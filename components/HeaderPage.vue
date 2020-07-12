@@ -89,7 +89,7 @@ export default {};
         color: #409eff;
       }
     }
-
+    .nuxt-link-active:not(:first-child),
     .nuxt-link-exact-active {
       background: #409eff;
       color: #fff !important;
