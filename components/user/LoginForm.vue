@@ -55,6 +55,8 @@ export default {
               showCancelButton: false,
               type: "success",
               center: true
+            }).then(() => {
+              this.$router.push("/");
             });
           });
         } else {
