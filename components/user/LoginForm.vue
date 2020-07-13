@@ -49,13 +49,13 @@ export default {
     handleLoginSubmit() {
       this.$refs.form.validate((flag, res) => {
         if (flag) {
-          this.$axios({
-            url: "/accounts/login",
-            method: "post",
-            data: this.form
-          }).then(res => {
-            const { data } = res;
-            this.$store.commit("user/setUserInfo", data);
+          this.$store.dispatch("user/login", this.form).then(res => {
+            this.$confirm("登陆成功", "提示", {
+              confirmButtonText: "确定",
+              showCancelButton: false,
+              type: "success",
+              center: true
+            });
           });
         } else {
           console.log(res);
