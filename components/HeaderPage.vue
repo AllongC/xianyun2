@@ -32,7 +32,7 @@
               <nuxt-link to="#">个人中心</nuxt-link>
             </el-dropdown-item>
             <el-dropdown-item>
-              <div>退出</div>
+              <div @click="quitState">退出</div>
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -45,7 +45,21 @@
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    quitState() {
+      this.$store.commit("user/setUserInfo", {});
+      this.$confirm("退出登陆成功", "提示", {
+        confirmButtonText: "确定",
+        showCancelButton: false,
+        type: "success",
+        center: true
+      }).then(() => {
+        this.$router.push("/");
+      });
+    }
+  }
+};
 </script>
 
 <style lang="less" scoped>
