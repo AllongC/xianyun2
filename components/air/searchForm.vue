@@ -22,6 +22,10 @@
           placeholder="请搜索出发城市"
           @select="handleDepartSelect"
           class="el-autocomplete"
+          v-model="form.departCity"
+          :trigger-on-focus="false"
+          :highlight-first-item="true"
+          :popper-append-to-body="false"
         ></el-autocomplete>
       </el-form-item>
       <el-form-item label="到达城市">
@@ -30,11 +34,21 @@
           placeholder="请搜索到达城市"
           @select="handleDestSelect"
           class="el-autocomplete"
+          v-model="form.destCity"
+          :trigger-on-focus="false"
+          :highlight-first-item="true"
+          :popper-append-to-body="false"
         ></el-autocomplete>
       </el-form-item>
       <el-form-item label="出发时间">
         <!-- change 用户确认选择日期时触发 -->
-        <el-date-picker type="date" placeholder="请选择日期" style="width: 100%;" @change="handleDate"></el-date-picker>
+        <el-date-picker
+          type="date"
+          placeholder="请选择日期"
+          style="width: 100%;"
+          @change="handleDate"
+          v-model="form.departDate"
+        ></el-date-picker>
       </el-form-item>
       <el-form-item label>
         <el-button style="width:100%;" type="primary" icon="el-icon-search" @click="handleSubmit">搜索</el-button>
@@ -47,6 +61,7 @@
 </template>
 
 <script>
+import moment from "moment";
 export default {
   data() {
     return {
@@ -54,39 +69,87 @@ export default {
         { icon: "iconfont icondancheng", name: "单程" },
         { icon: "iconfont iconshuangxiang", name: "往返" }
       ],
-      currentTab: 0
+      currentTab: 0,
+      form: {
+        departCity: "",
+        departCode: "",
+        departDate: "",
+        destCity: "",
+        destCode: ""
+      }
     };
   },
   methods: {
     // tab切换时触发
     handleSearchTab(item, index) {},
 
+    searchCity(value) {
+      return this.$axios({
+        url: "/cities",
+        method: "get",
+        params: {
+          name: value
+        }
+      }).then(res => {
+        const { data } = res.data;
+        const suggestRes = data.map(item => {
+          return {
+            value: item.name.replace(/市$/, ""),
+            code: item.sort
+          };
+        });
+        return suggestRes.filter(item => {
+          return item.code;
+        });
+      });
+    },
+
     // 出发城市输入框获得焦点时触发
     // value 是选中的值，cb是回调函数，接收要展示的列表
-    queryDepartSearch(value, cb) {
-      cb([{ value: 1 }, { value: 2 }, { value: 3 }]);
+    queryDepartSearch(value, suggest) {
+      this.searchCity(value).then(suggestRes => {
+        if (suggestRes.length == 1) {
+          this.form.departCode = suggestRes[0].code;
+        }
+        suggest(suggestRes);
+      });
     },
 
     // 目标城市输入框获得焦点时触发
     // value 是选中的值，cb是回调函数，接收要展示的列表
-    queryDestSearch(value, cb) {
-      cb([{ value: 1 }, { value: 2 }, { value: 3 }]);
+    queryDestSearch(value, suggest) {
+      this.searchCity(value).then(suggestRes => {
+        if (suggestRes.length == 1) {
+          this.form.destCode = suggestRes[0].code;
+        }
+        suggest(suggestRes);
+      });
     },
 
     // 出发城市下拉选择时触发
-    handleDepartSelect(item) {},
+    handleDepartSelect(item) {
+      this.form.departCode = item.code;
+    },
 
     // 目标城市下拉选择时触发
-    handleDestSelect(item) {},
+    handleDestSelect(item) {
+      this.form.destCode = item.code;
+    },
 
     // 确认选择日期时触发
-    handleDate(value) {},
+    handleDate(value) {
+      this.form.departDate = moment(value).format("YYYY-MM-DD");
+    },
 
     // 触发和目标城市切换时触发
     handleReverse() {},
 
     // 提交表单是触发
-    handleSubmit() {}
+    handleSubmit() {
+      this.form.departCity = this.form.departCity.replace(/市$/, "");
+      this.form.destCity = this.form.destCity.replace(/市$/, "");
+      console.log(this.form);
+    }
   },
   mounted() {}
 };
