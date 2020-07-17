@@ -12,6 +12,15 @@
         <!-- 航班信息 -->
         <div>
           <flightsItem v-for="(item,index) in flights" :key="index" :data="item" />
+          <el-pagination
+            @size-change="changeSize"
+            @current-change="changePage"
+            :current-page="currentPage"
+            :page-sizes="[5,10,15,20]"
+            :page-size="PageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total"
+          ></el-pagination>
         </div>
       </div>
 
@@ -33,8 +42,19 @@ export default {
   },
   data() {
     return {
-      flights: []
+      flights: [],
+      PageSize: 5,
+      total: 0,
+      currentPage: 1
     };
+  },
+  methods: {
+    changeSize(size) {
+      console.log(size);
+    },
+    changePage(page) {
+      console.log(page);
+    }
   },
   mounted() {
     this.$axios({
@@ -62,5 +82,8 @@ export default {
 
 .aside {
   width: 240px;
+}
+.el-pagination {
+  text-align: center;
 }
 </style>
