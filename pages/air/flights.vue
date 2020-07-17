@@ -40,27 +40,28 @@ export default {
     flightsListHead,
     flightsItem
   },
-  computed: {
-    dataList() {
-      const start = this.PageSize * (this.currentPage - 1);
-      const end = this.PageSize * this.currentPage;
-      return this.flights.slice(start, end);
-    }
-  },
   data() {
     return {
       flights: [],
       PageSize: 5,
       total: 0,
-      currentPage: 1
+      currentPage: 1,
+      dataList: []
     };
   },
   methods: {
+    changeData() {
+      const start = this.PageSize * (this.currentPage - 1);
+      const end = this.PageSize * this.currentPage;
+      this.dataList = this.flights.slice(start, end);
+    },
     changeSize(size) {
       this.PageSize = size;
+      this.changeData();
     },
     changePage(page) {
       this.currentPage = page;
+      this.changeData();
     }
   },
   mounted() {
@@ -71,6 +72,7 @@ export default {
     }).then(res => {
       this.total = res.data.total;
       this.flights = res.data.flights;
+      this.changeData();
     });
   }
 };
