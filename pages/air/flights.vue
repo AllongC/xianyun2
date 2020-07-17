@@ -5,7 +5,7 @@
       <div class="flights-content">
         <!-- 过滤条件 -->
         <div>
-          <FlightsFilters></FlightsFilters>
+          <FlightsFilters v-if="dataInfo.options" :options="dataInfo.options" />
         </div>
 
         <!-- 航班头部布局 -->
@@ -46,6 +46,7 @@ export default {
   },
   data() {
     return {
+      dataInfo: {},
       flights: [],
       PageSize: 5,
       total: 0,
@@ -75,6 +76,7 @@ export default {
       params: this.$route.query
     }).then(res => {
       this.total = res.data.total;
+      this.dataInfo = res.data;
       this.flights = res.data.flights;
       this.changeData();
     });
