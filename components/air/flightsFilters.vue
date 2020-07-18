@@ -58,7 +58,8 @@
 <script>
 export default {
   props: {
-    options: Object
+    options: Object,
+    flights: Array
   },
   data() {
     return {
@@ -85,27 +86,44 @@ export default {
   },
   mounted() {
     this.route = this.$route.query;
-    console.log(this.options);
+    console.log(this.flights[0]);
   },
   methods: {
     // 选择机场时候触发
     handleAirport(value) {
       console.log(value);
+      const dataList = this.flights.filter(item => {
+        return item.org_airport_name == value;
+      });
+      this.$emit("changeDataList", dataList);
     },
 
     // 选择出发时间时候触发
     handleFlightTimes(value) {
       console.log(value);
+      const dataList = this.flights.filter(item => {
+        const dep_time = Number(item.dep_time.split(":")[0]);
+        return value[0] < dep_time && value[1] > dep_time;
+      });
+      this.$emit("changeDataList", dataList);
     },
 
     // 选择航空公司时候触发
     handleCompany(value) {
       console.log(value);
+      const dataList = this.flights.filter(item => {
+        return item.airline_name == value;
+      });
+      this.$emit("changeDataList", dataList);
     },
 
     // 选择机型时候触发
     handleAirSize(value) {
       console.log(value);
+      const dataList = this.flights.filter(item => {
+        return item.plane_size == value;
+      });
+      this.$emit("changeDataList", dataList);
     },
 
     // 撤销条件时候触发

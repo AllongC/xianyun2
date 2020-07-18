@@ -5,7 +5,12 @@
       <div class="flights-content">
         <!-- 过滤条件 -->
         <div>
-          <FlightsFilters v-if="dataInfo.options" :options="dataInfo.options" />
+          <FlightsFilters
+            v-if="dataInfo.options"
+            :options="dataInfo.options"
+            :flights="dataInfo.flights"
+            @changeDataList="getNewList"
+          />
         </div>
 
         <!-- 航班头部布局 -->
@@ -14,16 +19,16 @@
         <!-- 航班信息 -->
         <div>
           <flightsItem v-for="(item,index) in dataList" :key="index" :data="item" />
-          <el-pagination
-            @size-change="changeSize"
-            @current-change="changePage"
-            :current-page="currentPage"
-            :page-sizes="[5,10,15,20]"
-            :page-size="PageSize"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="total"
-          ></el-pagination>
         </div>
+        <el-pagination
+          @size-change="changeSize"
+          @current-change="changePage"
+          :current-page="currentPage"
+          :page-sizes="[5,10,15,20]"
+          :page-size="PageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+        ></el-pagination>
       </div>
 
       <!-- 侧边栏 -->
@@ -66,6 +71,10 @@ export default {
     },
     changePage(page) {
       this.currentPage = page;
+      this.changeData();
+    },
+    getNewList(newList) {
+      this.flights = newList;
       this.changeData();
     }
   },
