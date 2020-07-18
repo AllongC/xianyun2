@@ -17,9 +17,10 @@
         <flightsListHead />
 
         <!-- 航班信息 -->
-        <div>
+        <div v-if="flights.length>0">
           <flightsItem v-for="(item,index) in dataList" :key="index" :data="item" />
         </div>
+        <div v-else class="none">暂时没有该航班</div>
         <el-pagination
           @size-change="changeSize"
           @current-change="changePage"
@@ -110,5 +111,11 @@ export default {
 }
 .el-pagination {
   text-align: center;
+}
+.none {
+  height: 300px;
+  line-height: 300px;
+  text-align: center;
+  color: #666;
 }
 </style>
