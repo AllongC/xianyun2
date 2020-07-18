@@ -48,6 +48,7 @@
           style="width: 100%;"
           @change="handleDate"
           v-model="form.departDate"
+          :picker-options="pickerOptions"
         ></el-date-picker>
       </el-form-item>
       <el-form-item label>
@@ -76,6 +77,11 @@ export default {
         departDate: "",
         destCity: "",
         destCode: ""
+      },
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() < Date.now();
+        }
       }
     };
   },
