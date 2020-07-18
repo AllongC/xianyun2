@@ -16,7 +16,7 @@
             </el-input>
           </el-form-item>
 
-          <span class="delete-user" @click="handleDeleteUser()">-</span>
+          <span class="delete-user" @click="handleDeleteUser(index)">-</span>
         </div>
       </el-form>
 
@@ -80,7 +80,9 @@ export default {
     },
 
     // 移除乘机人
-    handleDeleteUser() {},
+    handleDeleteUser(index) {
+      this.users.splice(index, 1);
+    },
 
     // 发送手机验证码
     handleSendCaptcha() {},
