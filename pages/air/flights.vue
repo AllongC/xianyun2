@@ -75,6 +75,7 @@ export default {
     },
     getNewList(newList) {
       this.flights = newList;
+      this.total = this.flights.length;
       this.changeData();
     }
   },

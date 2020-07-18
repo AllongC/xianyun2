@@ -95,7 +95,6 @@ export default {
         dataList = dataList.filter(item => {
           return item.org_airport_name == this.airport;
         });
-        this.$emit("changeDataList", dataList);
       }
 
       if (this.flightTimes) {
@@ -104,24 +103,28 @@ export default {
           const time = this.flightTimes;
           return time[0] < dep_time && time[1] > dep_time;
         });
-        this.$emit("changeDataList", dataList);
       }
       if (this.company) {
         dataList = dataList.filter(item => {
           return item.airline_name == this.company;
         });
-        this.$emit("changeDataList", dataList);
       }
       if (this.airSize) {
         dataList = dataList.filter(item => {
           return item.plane_size == this.airSize;
         });
-        this.$emit("changeDataList", dataList);
       }
+      this.$emit("changeDataList", dataList);
     },
 
     // 撤销条件时候触发
-    handleFiltersCancel() {}
+    handleFiltersCancel() {
+      this.airport = "";
+      this.flightTimes = "";
+      this.company = "";
+      this.airSize = "";
+      this.filterTotal();
+    }
   }
 };
 </script>
