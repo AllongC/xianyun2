@@ -8,7 +8,7 @@
         {{route.departDate}}
       </el-col>
       <el-col :span="4">
-        <el-select size="mini" v-model="airport" placeholder="起飞机场" @change="handleAirport">
+        <el-select size="mini" v-model="airport" placeholder="起飞机场" @change="filterTotal">
           <el-option
             :label="item"
             :value="item"
@@ -18,7 +18,7 @@
         </el-select>
       </el-col>
       <el-col :span="4">
-        <el-select size="mini" v-model="flightTimes" placeholder="起飞时间" @change="handleFlightTimes">
+        <el-select size="mini" v-model="flightTimes" placeholder="起飞时间" @change="filterTotal">
           <el-option
             :label="`${item.from}:00 - ${item.to}:00`"
             :value="[item.from,item.to]"
@@ -28,7 +28,7 @@
         </el-select>
       </el-col>
       <el-col :span="4">
-        <el-select size="mini" v-model="company" placeholder="航空公司" @change="handleCompany">
+        <el-select size="mini" v-model="company" placeholder="航空公司" @change="filterTotal">
           <el-option
             :label="item"
             :value="item"
@@ -38,7 +38,7 @@
         </el-select>
       </el-col>
       <el-col :span="4">
-        <el-select size="mini" v-model="airSize" placeholder="机型" @change="handleAirSize">
+        <el-select size="mini" v-model="airSize" placeholder="机型" @change="filterTotal">
           <el-option
             :label="item.label"
             :value="item.value"
@@ -89,41 +89,35 @@ export default {
     console.log(this.flights[0]);
   },
   methods: {
-    // 选择机场时候触发
-    handleAirport(value) {
-      console.log(value);
-      const dataList = this.flights.filter(item => {
-        return item.org_airport_name == value;
-      });
-      this.$emit("changeDataList", dataList);
-    },
+    filterTotal() {
+      let dataList = [...this.flights];
+      if (this.airport) {
+        dataList = dataList.filter(item => {
+          return item.org_airport_name == this.airport;
+        });
+        this.$emit("changeDataList", dataList);
+      }
 
-    // 选择出发时间时候触发
-    handleFlightTimes(value) {
-      console.log(value);
-      const dataList = this.flights.filter(item => {
-        const dep_time = Number(item.dep_time.split(":")[0]);
-        return value[0] < dep_time && value[1] > dep_time;
-      });
-      this.$emit("changeDataList", dataList);
-    },
-
-    // 选择航空公司时候触发
-    handleCompany(value) {
-      console.log(value);
-      const dataList = this.flights.filter(item => {
-        return item.airline_name == value;
-      });
-      this.$emit("changeDataList", dataList);
-    },
-
-    // 选择机型时候触发
-    handleAirSize(value) {
-      console.log(value);
-      const dataList = this.flights.filter(item => {
-        return item.plane_size == value;
-      });
-      this.$emit("changeDataList", dataList);
+      if (this.flightTimes) {
+        dataList = dataList.filter(item => {
+          const dep_time = Number(item.dep_time.split(":")[0]);
+          const time = this.flightTimes;
+          return time[0] < dep_time && time[1] > dep_time;
+        });
+        this.$emit("changeDataList", dataList);
+      }
+      if (this.company) {
+        dataList = dataList.filter(item => {
+          return item.airline_name == this.company;
+        });
+        this.$emit("changeDataList", dataList);
+      }
+      if (this.airSize) {
+        dataList = dataList.filter(item => {
+          return item.plane_size == this.airSize;
+        });
+        this.$emit("changeDataList", dataList);
+      }
     },
 
     // 撤销条件时候触发
