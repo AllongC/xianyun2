@@ -63,6 +63,11 @@ export default {
       dataList: []
     };
   },
+  watch: {
+    $route() {
+      this.load();
+    }
+  },
   methods: {
     changeData() {
       const start = this.PageSize * (this.currentPage - 1);
@@ -81,19 +86,22 @@ export default {
       this.flights = newList;
       this.total = this.flights.length;
       this.changeData();
+    },
+    load() {
+      this.$axios({
+        url: "/airs",
+        method: "get",
+        params: this.$route.query
+      }).then(res => {
+        this.total = res.data.total;
+        this.dataInfo = res.data;
+        this.flights = res.data.flights;
+        this.changeData();
+      });
     }
   },
   mounted() {
-    this.$axios({
-      url: "/airs",
-      method: "get",
-      params: this.$route.query
-    }).then(res => {
-      this.total = res.data.total;
-      this.dataInfo = res.data;
-      this.flights = res.data.flights;
-      this.changeData();
-    });
+    this.load();
   }
 };
 </script>
