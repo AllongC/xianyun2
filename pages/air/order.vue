@@ -7,16 +7,18 @@
       </div>
 
       <!-- 侧边栏 -->
-      <div class="aside"></div>
+      <OrderAside v-if="order" :data="order" />
     </el-row>
   </div>
 </template>
 
 <script>
 import OrderForm from "@/components/air/orderForm.vue";
+import OrderAside from "@/components/air/OrderAside.vue";
 export default {
   components: {
-    OrderForm
+    OrderForm,
+    OrderAside
   },
   data() {
     return {
