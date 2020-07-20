@@ -26,9 +26,14 @@
     <div class="air-column">
       <h2>保险</h2>
       <div>
-        <div class="insurance-item">
-          <el-checkbox label="航空意外险：￥30/份×1  最高赔付260万" border></el-checkbox>
-        </div>
+        <el-checkbox-group v-model="insuranceList">
+          <div class="insurance-item" v-for="(item, index) in data.insurances" :key="index">
+            <el-checkbox
+              :label="item.id"
+              border
+            >{{`${item.type}：￥${item.price}/份×${users.length} 最高赔付${item.compensation}`}}</el-checkbox>
+          </div>
+        </el-checkbox-group>
       </div>
     </div>
 
@@ -60,6 +65,9 @@
 
 <script>
 export default {
+  props: {
+    data: Object
+  },
   data() {
     return {
       users: [
@@ -67,7 +75,8 @@ export default {
           name: "",
           id: ""
         }
-      ]
+      ],
+      insuranceList: []
     };
   },
   methods: {
