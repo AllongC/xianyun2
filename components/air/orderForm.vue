@@ -115,7 +115,26 @@ export default {
 
     // 提交订单
     handleSubmit() {
-      console.log(this.users);
+      const data = {
+        users: this.users,
+        insurances: this.insuranceList,
+        contactName: this.contactName,
+        contactPhone: this.contactPhone,
+        invoice: false,
+        seat_xid: this.$route.query.seat_xid,
+        air: this.$route.query.id,
+        captcha: this.captcha
+      };
+      this.$axios({
+        url: "/airorders",
+        method: "post",
+        headers: {
+          Authorization: "Bearer " + this.$store.state.user.userInfo.token
+        },
+        data
+      }).then(res => {
+        console.log(res);
+      });
     }
   }
 };
