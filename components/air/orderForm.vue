@@ -82,7 +82,31 @@ export default {
       contactName: ""
     };
   },
+  watch: {
+    users: {
+      handler() {
+        this.compuntedPrice();
+      },
+      immediate: true
+    },
+    insuranceList: {
+      handler() {
+        this.compuntedPrice();
+      },
+      immediate: true
+    }
+  },
   methods: {
+    compuntedPrice() {
+      let price = 0;
+      price += this.data.seat_infos.org_settle_price * this.users.length;
+      this.data.insurances.forEach(item => {
+        if (this.insuranceList.indexOf(item.id) >= 0) {
+          price += item.price * this.users.length;
+        }
+      });
+      this.$emit("getPrice", price);
+    },
     // 添加乘机人
     handleAddUsers() {
       this.users.push({

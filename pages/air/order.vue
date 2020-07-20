@@ -3,11 +3,11 @@
     <el-row type="flex" justify="space-between">
       <!-- 订单表单 -->
       <div class="main">
-        <OrderForm v-if="order" :data="order" />
+        <OrderForm v-if="order" :data="order" @getPrice="getPrice" />
       </div>
 
       <!-- 侧边栏 -->
-      <OrderAside v-if="order" :data="order" />
+      <OrderAside v-if="order" :data="order" :totalPrice="totalPrice" />
     </el-row>
   </div>
 </template>
@@ -22,8 +22,14 @@ export default {
   },
   data() {
     return {
-      order: null
+      order: null,
+      totalPrice: 0
     };
+  },
+  methods: {
+    getPrice(price) {
+      this.totalPrice = price;
+    }
   },
   mounted() {
     this.$axios({
