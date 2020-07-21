@@ -2,7 +2,7 @@
   <div class="main">
     <div class="air-column">
       <h2>乘机人</h2>
-      <el-form class="member-info" :model="{users}">
+      <el-form class="member-info" :model="{users}" ref="formUser">
         <div class="member-info-item" v-for="(item,index) in users" :key="index">
           <el-form-item
             label="乘机人类型"
@@ -64,6 +64,7 @@
                   captcha
                 }"
           :rules="rules"
+          ref="formContact"
         >
           <el-form-item label="姓名" prop="contactName">
             <el-input v-model="contactName"></el-input>
@@ -185,7 +186,7 @@ export default {
     },
 
     // 提交订单
-    handleSubmit() {
+    async handleSubmit() {
       const data = {
         users: this.users,
         insurances: this.insuranceList,
@@ -196,16 +197,20 @@ export default {
         air: this.$route.query.id,
         captcha: this.captcha
       };
-      this.$axios({
-        url: "/airorders",
-        method: "post",
-        headers: {
-          Authorization: "Bearer " + this.$store.state.user.userInfo.token
-        },
-        data
-      }).then(res => {
-        console.log(res);
-      });
+      const formUser = await this.$refs.formUser.validate().catch(e => {});
+      const contact = await this.$refs.formContact.validate().catch(e => {});
+      if (formUser && contact) {
+        this.$axios({
+          url: "/airorders",
+          method: "post",
+          headers: {
+            Authorization: "Bearer " + this.$store.state.user.userInfo.token
+          },
+          data
+        }).then(res => {
+          console.log(res);
+        });
+      }
     }
   }
 };
