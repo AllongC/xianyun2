@@ -26,8 +26,8 @@ export default {
   data() {
     return {
       form: {
-        username: "13800138000",
-        password: "123456"
+        username: "",
+        password: ""
       },
       rules: {
         username: [
@@ -56,7 +56,7 @@ export default {
               type: "success",
               center: true
             }).then(() => {
-              this.$router.push("/");
+              this.$emit("LoginSuccess");
             });
           });
         } else {

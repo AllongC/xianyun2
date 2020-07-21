@@ -115,7 +115,7 @@ export default {
               type: "success",
               center: true
             }).then(() => {
-              this.$emit("changeId");
+              this.$emit("RegisterSuccess");
             });
           });
         }

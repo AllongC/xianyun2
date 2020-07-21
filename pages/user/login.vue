@@ -14,10 +14,10 @@
         </el-row>
 
         <!-- 登录功能组件 -->
-        <LoginForm v-if="currentTab == 0" />
+        <LoginForm v-if="currentTab == 0" @LoginSuccess="LoginSuccess" />
 
         <!-- 注册功能组件 -->
-        <RegisterForm @changeId="currentTab=0" v-if="currentTab == 1" />
+        <RegisterForm @RegisterSuccess="currentTab=0" v-if="currentTab == 1" />
       </div>
     </el-row>
   </div>
@@ -38,6 +38,9 @@ export default {
     };
   },
   methods: {
+    LoginSuccess() {
+      this.$router.push("/");
+    },
     handleChangeTab(index) {
       this.currentTab = index;
     }
