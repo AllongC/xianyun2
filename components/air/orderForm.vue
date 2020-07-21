@@ -248,7 +248,13 @@ export default {
           },
           data
         }).then(res => {
-          console.log(res);
+          const { data, message } = res.data;
+          if (message == "订单提交成功") {
+            this.$message.success(message);
+            setTimeout(() => {
+              this.$router.push("/air/pay?id=" + data.id);
+            }, 1000);
+          }
         });
       }
     }
