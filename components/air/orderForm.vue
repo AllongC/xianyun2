@@ -1,14 +1,30 @@
 <template>
   <div class="main">
     <div class="air-column">
-      <h2>剩机人</h2>
-      <el-form class="member-info">
+      <h2>乘机人</h2>
+      <el-form class="member-info" :model="{users}">
         <div class="member-info-item" v-for="(item,index) in users" :key="index">
-          <el-form-item label="乘机人类型">
+          <el-form-item
+            label="乘机人类型"
+            :prop="`users[${index}].username`"
+            :rules="
+                  [
+                  {required:true,message:'乘客姓名不能为空',trigger:'blur'}
+                  ]
+                "
+          >
             <el-input placeholder="姓名" class="input-with-select" v-model="item.username"></el-input>
           </el-form-item>
 
-          <el-form-item label="证件类型">
+          <el-form-item
+            label="证件类型"
+            :prop="`users[${index}].id`"
+            :rules="
+                  [
+                  {required:true,message:'乘客身份证不能为空',trigger:'blur'}
+                  ]
+           "
+          >
             <el-input placeholder="证件号码" class="input-with-select" v-model="item.id">
               <el-select slot="prepend" value="1" placeholder="请选择">
                 <el-option label="身份证" value="1" :checked="true"></el-option>
@@ -40,12 +56,20 @@
     <div class="air-column">
       <h2>联系人</h2>
       <div class="contact">
-        <el-form label-width="60px">
-          <el-form-item label="姓名">
+        <el-form
+          label-width="80px"
+          :model="{
+                  contactName,
+                  contactPhone,
+                  captcha
+                }"
+          :rules="rules"
+        >
+          <el-form-item label="姓名" prop="contactName">
             <el-input v-model="contactName"></el-input>
           </el-form-item>
 
-          <el-form-item label="手机">
+          <el-form-item label="手机" prop="contactPhone">
             <el-input placeholder="请输入内容" v-model="contactPhone">
               <template slot="append">
                 <el-button @click="handleSendCaptcha">发送验证码</el-button>
@@ -53,7 +77,7 @@
             </el-input>
           </el-form-item>
 
-          <el-form-item label="验证码">
+          <el-form-item label="验证码" prop="captcha">
             <el-input v-model="captcha"></el-input>
           </el-form-item>
         </el-form>
@@ -77,9 +101,32 @@ export default {
         }
       ],
       insuranceList: [],
-      captcha: "",
+      contactName: "",
       contactPhone: "",
-      contactName: ""
+      captcha: "",
+      rules: {
+        contactName: [
+          {
+            required: true,
+            message: "请输入用户名",
+            trigger: "blur"
+          }
+        ],
+        contactPhone: [
+          {
+            required: true,
+            message: "请输入手机号码",
+            trigger: "blur"
+          }
+        ],
+        captcha: [
+          {
+            required: true,
+            message: "请输入验证码",
+            trigger: "blur"
+          }
+        ]
+      }
     };
   },
   watch: {
@@ -187,9 +234,6 @@ export default {
 
 .input-with-select /deep/ .el-input-group__prepend {
   background-color: #fff;
-}
-.member-info /deep/ .el-form-item {
-  margin-bottom: 0;
 }
 
 .member-info-item {
