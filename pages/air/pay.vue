@@ -3,14 +3,14 @@
     <div class="main">
       <div class="pay-title">
         支付总金额
-        <span class="pay-price">￥ 1000</span>
+        <span class="pay-price" v-if="data">￥ {{data.price}}</span>
       </div>
       <div class="pay-main">
         <h4>微信支付</h4>
         <el-row type="flex" justify="space-between" align="middle" class="pay-qrcode">
           <div class="qrcode">
             <!-- 二维码 -->
-            <canvas id="qrcode-stage"></canvas>
+            <canvas id="qrcode-stage" ref="canvas"></canvas>
             <p>请使用微信扫一扫</p>
             <p>扫描二维码支付</p>
           </div>
@@ -24,7 +24,36 @@
 </template>
 
 <script>
-export default {};
+import QRCode from "qrcode";
+export default {
+  data() {
+    return {
+      data: null
+    };
+  },
+  watch: {
+    "$store.state.user.userInfo.token": {
+      handler() {
+        if (this.$store.state.user.userInfo.token) {
+          this.$axios({
+            url: "/airorders/" + this.$route.query.id,
+            method: "get",
+            headers: {
+              Authorization: "Bearer " + this.$store.state.user.userInfo.token
+            }
+          }).then(res => {
+            const { data } = res;
+            this.data = data;
+            QRCode.toCanvas(this.$refs.canvas, data.payInfo.code_url, {
+              width: 200
+            });
+          });
+        }
+      },
+      immediate: true
+    }
+  }
+};
 </script>
 
 <style scoped lang="less">
